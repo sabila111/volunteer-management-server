@@ -31,18 +31,18 @@ async function run() {
 
     const volunteersAddCollection = client.db("volunteerPortal").collection("volunteers");
 
-    // app.get('/surveyInfo', async (req, res) => {
-    //     const result = await surveyInfoCollection.find().toArray();
-    //     res.send(result);
-    //   })
+    app.get('/volunteer', async (req, res) => {
+        const result = await volunteersAddCollection.find().toArray();
+        res.send(result);
+      })
   
-    //   app.post('/surveyInfo', async (req, res) => {
+      app.post('/volunteer', async (req, res) => {
   
-    //     const job = req.body;
-    //     console.log(job)
-    //     const result = await volunteersAddCollection.insertOne(job)
-    //     res.send(result)
-    //   })
+        const job = req.body;
+        console.log(job)
+        const result = await volunteersAddCollection.insertOne(job)
+        res.send(result)
+      })
 
 
     // Connect the client to the server	(optional starting in v4.7)
