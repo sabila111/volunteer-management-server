@@ -1,7 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 require('dotenv').config()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express()
 const port = process.env.PORT || 5000
 
@@ -30,19 +30,53 @@ async function run() {
 
 
     const volunteersAddCollection = client.db("volunteerPortal").collection("volunteers");
+    const volunteersApplicationCollection = client.db("volunteerPortal").collection("volunteers_applications");
 
     app.get('/volunteer', async (req, res) => {
         const result = await volunteersAddCollection.find().toArray();
         res.send(result);
       })
   
-      app.post('/volunteer', async (req, res) => {
+      app.get('/volunteer', async (req, res) => {
+
+        const cursor = volunteersAddCollection.find().sort((a, b) => b.rating - a.rating).limit(6)
+        const result = await cursor.toArray()
+        res.send(result)
   
+        
+      })
+
+      app.get('/volunteer/:id' , async(req, res) =>{
+
+        const id = req.params.id;
+        const query = {_id: new ObjectId(id)}
+        const result = await volunteersAddCollection.findOne(query)
+        res.send(result)
+    })
+      
+  
+
+      app.post('/volunteer', async (req, res) => {
         const job = req.body;
         console.log(job)
         const result = await volunteersAddCollection.insertOne(job)
         res.send(result)
       })
+
+
+      // be volunteer api
+      app.post('/volunteer-application', async (req, res) => {
+        const job = req.body;
+        const postId = new ObjectId(job.postId);
+        console.log(job)
+        const result = await volunteersApplicationCollection.insertOne(job)
+        const incrementResult = await volunteersAddCollection.updateOne(
+          { _id: postId}, 
+          { $inc: { volunteersNeeded: -1 } } 
+      );
+        res.send({result, incrementResult})
+      })
+
 
 
     // Connect the client to the server	(optional starting in v4.7)
