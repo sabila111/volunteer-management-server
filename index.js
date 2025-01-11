@@ -46,6 +46,14 @@ async function run() {
         
       })
 
+      app.get('/volunteer', async (req, res) => {
+        const title = req.query.title ; 
+        const query = { postTitle: { $regex: title, $options: 'i' } };
+        const result = await volunteersAddCollection.find(query).toArray();
+    
+        res.send(result);
+    });
+
       app.get('/volunteer/:id' , async(req, res) =>{
 
         const id = req.params.id;
@@ -65,6 +73,12 @@ async function run() {
 
 
       // be volunteer api
+
+      app.get('/volunteer-application', async (req, res) => {
+        const result = await volunteersApplicationCollection.find().toArray();
+        res.send(result);
+      })
+
       app.post('/volunteer-application', async (req, res) => {
         const job = req.body;
         const postId = new ObjectId(job.postId);
