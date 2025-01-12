@@ -72,6 +72,31 @@ async function run() {
       })
 
 
+      app.put('/volunteer/:id', async (req, res) => {
+
+        const id = req.params.id;
+        const filter = { _id: new ObjectId(id) }
+        const options = {upsert: true}
+        const updatePost = req.body
+        const review = {
+          $set: {
+            postTitle:updatePost.postTitle,
+            category:updatePost.category,
+            location: updatePost.location,
+            description:updatePost.description,
+            volunteersNeeded: updatePost.volunteersNeeded,
+            deadline:updatePost.deadline,
+            thumbnail:updatePost.thumbnail
+          }
+        }
+  
+  
+        const result = await volunteersAddCollection.updateOne(filter, review, options)
+        res.send(result)
+  
+      })
+
+
       app.delete('/volunteer/:id', async (req, res) => {
 
         const id = req.params.id;
