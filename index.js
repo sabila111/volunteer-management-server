@@ -10,7 +10,7 @@ const port = process.env.PORT || 5000
 // middleware
 app.use(cors())
 app.use(express.json())
-
+app.use(cookieParser())
 
 
 
@@ -33,6 +33,26 @@ async function run() {
 
     const volunteersAddCollection = client.db("volunteerPortal").collection("volunteers");
     const volunteersApplicationCollection = client.db("volunteerPortal").collection("volunteers_applications");
+
+
+
+    app.post('/jwt', async (req, res) => {
+      const user = req.body;
+      const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '5h' });
+      res.cookie('token', token, {
+        httpOnly: true,
+        secure: false
+      })
+    .send({ success: true });
+    })
+
+    app.post('/logout',async (req, res) =>{
+      res.clearCookie('token', {
+        httpOnly:true,
+        secure: false
+      })
+      .send({ success: true });
+    } )
 
     app.get('/volunteer', async (req, res) => {
         const result = await volunteersAddCollection.find().toArray();
