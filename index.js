@@ -72,14 +72,7 @@ const verifyToken = (req, res, next) => {
   next();
 }
 
-    app.post('/logout',async (req, res) =>{
-      res.clearCookie('token', {
-        httpOnly:true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "strict"
-      })
-      .send({ success: true });
-    } )
+    
 
 
      app.get("/user", verifyToken, verifyAdmin,  async (req, res) => {
