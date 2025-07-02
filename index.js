@@ -246,8 +246,8 @@ const verifyToken = (req, res, next) => {
 run().catch(console.dir);
 
 
-app.get('/', (req, res) => {
-    res.send('Volunteer page is available')
+app.get('https://volunteer-management-server-puce.vercel.app/', (req, res) => {
+    res.send('Volunteer page is availableeeeeeeeeeeeee')
   })
   
   app.listen(port, () => {
