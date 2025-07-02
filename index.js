@@ -8,7 +8,10 @@ const app = express()
 const port = process.env.PORT || 5000
 
 // middleware
-app.use(cors())
+app.use(cors({
+  origin: ['http://localhost:5173', 'https://assignment-11-project-8a718.web.app'],
+  credentials: true
+}));
 app.use(express.json())
 app.use(cookieParser())
 
@@ -107,6 +110,12 @@ const verifyToken = (req, res, next) => {
     }
     res.send({ admin });
   })
+
+  app.delete('/user/:id', async (req, res) => {
+  const id = req.params.id;
+  const result = await userCollection.deleteOne({ _id: new ObjectId(id) });
+  res.send(result);
+});
 
   app.patch("/user/admin/:id",verifyToken,verifyAdmin, async (req, res) => {
       const id = req.params.id;
